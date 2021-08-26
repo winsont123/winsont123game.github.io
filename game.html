@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+</head>
+<style>
+    /* body{
+        margin: auto;
+    } */
+    .container{
+        display: flex;
+        flex-direction: row;
+        
+    }
+    .pertama div.kotak,.kedua div.kotak{
+        width: 200px;
+        height: 200px;
+        border: black solid 1px;
+        /* overflow: auto; */
+        /* display: flex; */
+        /* flex-direction: row; */
+    }
+    .pertama,.kedua{
+        overflow: hidden;
+    }
+    .active{
+        opacity: 0;
+        background-color: black;
+    }
+</style>
+<body>
+    <h1>Game cocok gambar</h1>
+    <div class="sisa"><h2>sisa gerak</h2></div>
+    <div class="container">
+        <div class="pertama">
+        <div class="kotak"><img src="" alt="" width="300" class="active" id="1"></div>
+        <div class="kotak"><img src="" alt="" width="300" class="active" id="2"></div>
+        <div class="kotak"><img src="" alt="" width="300" class="active" id="3"></div>
+        <div class="kotak"><img src="" alt="" width="300" class="active" id="4"></div>
+        <div class="kotak"><img src="" alt="" width="300" class="active" id="5"></div>
+        </div>
+        <div class="kedua">
+        <div class="kotak"><img src="" alt="" width="300" class="active" id="6"></div>
+        <div class="kotak"><img src="" alt="" width="300" class="active" id="7"></div>
+        <div class="kotak"><img src="" alt="" width="300" class="active" id="8"></div>
+        <div class="kotak"><img src="" alt="" width="300" class="active" id="9"></div>
+        <div class="kotak"><img src="" alt="" width="300" class="active" id="10"></div>
+        </div>
+    </div>
+</body>
+<script>
+    let objek=[
+        {
+            nama:"bali",
+            nomor:""
+        },
+        {
+            nama:"jakarta",
+            nomor:""
+        },
+        {
+            nama:"kalimantan",
+            nomor:""
+        },
+        {
+            nama:"jakarta",
+            nomor:""
+        },
+        {
+            nama:"bali",
+            nomor:""
+        },
+        {
+            nama:"kalimantan",
+            nomor:""
+        },
+        {
+            nama:"paris",
+            nomor:""
+        },
+        {
+            nama:"squidward",
+            nomor:""
+        },
+        {
+            nama:"squidward",
+            nomor:""
+        },
+        {
+            nama:"paris",
+            nomor:""
+        }
+    ];
+    // console.log(objek.length);
+    let hasil=false;
+    let random=[''];
+    // while(hasil=='salah' || random.length<10){
+    //     let acak=Math.floor(Math.random() * 11);
+    //     random.forEach(function(a,b){
+    //         if(acak==a){
+    //             hasil='salah';
+    //         }else{
+    //             random.push(acak);
+    //             hasil='benar';
+    //         }
+    //     })
+    // }
+    function cek(a){
+        if(a===10){
+            console.log("tidak menerima 10");
+            return false;
+        }
+        for (let i = 0; i < random.length; i++) {
+            if(random[i]===a){
+                console.log("sudah ada");
+                hasil="salah";
+                return false;
+            }
+            else if(random[i]!==a){
+                hasil="benar";
+            }
+        }
+        if(hasil=='benar'){
+            random.push(a);
+        }
+
+    }
+    while(random.length<11){
+        let acak=Math.floor(Math.random() * 10);
+        cek(acak)
+    }
+    random.shift();
+    console.log(random);
+
+
+    for (let i = 0; i < objek.length; i++) {
+        for (let j = 0; j < random.length; j++) {
+            objek[i]["nomor"]=random[i];
+        }
+    }
+
+    const container=document.querySelector(".container");
+    const kotak=document.querySelectorAll(".kotak img");
+    const ps=document.querySelector(".sisa");
+    // ps.addEventListener('click',function(){
+    //     alert('ok')
+    // })
+    // console.log(kotak);
+    let kotak2=Array.from(kotak);
+    // console.log(kotak2);
+        for (let j = 0; j < objek.length; j++) {
+            let isi =objek[j]["nomor"];
+            kotak2[isi].setAttribute("src",'gambar/'+objek[j]["nama"]+'.jpg');
+            // console.log(kotak2[isi]);
+         }
+         let sekor=0;
+         let img1;
+         let img2;
+         let tangkap1;
+         let tangkap2;
+         let sisa=20;
+         let brp=0;
+    kotak2.forEach(element => {
+        element.addEventListener('click',function(){
+            element.classList.toggle('active');
+            sekor++;
+            if(sekor==1){
+            img1=element.src;
+            tangkap1=element.id;
+            console.log(img1);
+            console.log(tangkap1);
+            }
+            else if(sekor==2){
+                img2=element.src;
+                tangkap2=element.id;
+                console.log(img2);
+                console.log(tangkap2);
+            }
+            if(img1!==img2 && sekor==2){
+                console.log('tidak ok');
+                sekor=0;
+                setTimeout(function(){document.getElementById(tangkap1).classList.add('active');
+                document.getElementById(tangkap2).classList.add('active');},500)
+                
+            }else if(img1==img2 && sekor==2 && tangkap1!==tangkap2){
+                setTimeout(function(){
+                document.getElementById(tangkap1).style.display='none';
+                document.getElementById(tangkap2).style.display='none';
+                },500);
+                document.getElementById(tangkap2).parentElement.style.background='black';
+                document.getElementById(tangkap1).parentElement.style.background='black';
+                brp++;
+                console.log(brp);
+                sekor=0;
+            }
+            sisa=sisa-1;
+            if(sisa==0 && brp<5){
+                alert("awokaowkak kalah kau kan")
+            }
+            else if((sisa>0 && brp==5) || (sisa==0 && brp==5)){
+                alert('anjay menang');
+            }
+            ps.innerHTML=sisa;
+        });
+    });
+    
+    // let sekor=0;
+    // document.body.addEventListener('click',function(){
+    //     sekor++
+    // })
+    // console.log(sekor)
+// console.log(objek);
+</script>
+</html>
